@@ -22,6 +22,9 @@ class LinearBayesianRegression():
         return self.mu
     
     def w_sample(self, n=1):
+        print(np.random.multivariate_normal([0, 0], [[1, 0], [0, 1]]))
+        print(self.mu.T)
+        print(self.S)
         return [np.random.multivariate_normal(self.mu.T, self.S).T for _ in range(n)]
     
     def w_distribute(self):
@@ -35,3 +38,7 @@ class LinearBayesianRegression():
     
     def y_distribute(self, X):
         return np.dot(X, self.mu), (1 / self.beta) + np.dot(np.array(X).T, np.dot(self.S, X))
+    
+    
+    
+    
