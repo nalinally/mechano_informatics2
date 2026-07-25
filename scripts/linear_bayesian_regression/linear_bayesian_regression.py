@@ -27,7 +27,7 @@ class LinearBayesianRegression():
         return
     
     def w_mostlike(self):
-        return self.mu
+        return self.mu.T[0]
     
     def w_sample(self, n=1):
         # print(np.random.multivariate_normal([0, 0], [[1, 0], [0, 1]]))

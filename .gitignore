@@ -1,3 +1,4 @@
 scripts/common/__pycache__/
 scripts/gaussian_process_regression/__pycache__/
 scripts/linear_bayesian_regression/__pycache__/
+figs/**/*.png

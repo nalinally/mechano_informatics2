@@ -58,7 +58,7 @@ class Visualize():
     def set_figsize(self, x, y):
         self.figsize = (x, y)
 
-    def show(self):
+    def make_fig(self):
         self.fig = plt.figure(figsize=self.figsize)
         ax = []
         n = self.num_of_sheets(self.graphs)
@@ -81,7 +81,14 @@ class Visualize():
                 else:
                     plt.scatter(graph.input, graph.output, label=graph.datalabel, color=graph.color)
         plt.tight_layout()
+        
+    def show(self):
+        self.make_fig()
         plt.show()
+        
+    def save(self, file_name):
+        self.make_fig()
+        plt.savefig(f"{file_name}.png", format="png")
         
     def recstart(self, file_name, interval=200):
         self.recording = True
