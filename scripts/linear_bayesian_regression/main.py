@@ -91,7 +91,7 @@ def main():
             visualizer.set_figsize(18, 6)
             visualizer.draw_2_variable_func_colormap(f, [-5, 5], [-5, 5], f"pdf of (w0, w1): n={i}", "w0", "w1")
             visualizer.draw_1_variable_func(y_func, x_range, False, "x vs y", f"y = {a}x + {b}", "x", "y", "blue")
-            visualizer.draw_1_variable_data(x_data, y_data, True, "", f"train data", "x", "y")
+            visualizer.draw_1_variable_data(x_data, y_data, True, True, "", f"train data", "x", "y")
             for w_ in w:
                 def g(x):
                     return gendata.linear(w_[1], w_[0], x)

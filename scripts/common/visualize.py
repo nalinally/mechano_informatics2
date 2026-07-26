@@ -46,8 +46,8 @@ class Visualize():
         y = [f(x_) for x_ in x]
         self.graphs.append(self.Graph(self.Action.ONEVAR_PLOT, x, y, overwrap, title, datalabel, xlabel, ylabel, color))
         
-    def draw_1_variable_data(self, x, y, overwrap=False, title="", datalabel="", xlabel="x", ylabel="y", color=""):
-        self.graphs.append(self.Graph(self.Action.ONEVAR_SCATTER, x, y, overwrap, title, datalabel, xlabel, ylabel, color))
+    def draw_1_variable_data(self, x, y, overwrap=False, scatter="True", title="", datalabel="", xlabel="x", ylabel="y", color=""):
+        self.graphs.append(self.Graph(self.Action.ONEVAR_SCATTER if scatter else self.Action.ONEVAR_PLOT, x, y, overwrap, title, datalabel, xlabel, ylabel, color))
 
     def reset(self):
         self.__init__()
@@ -80,6 +80,8 @@ class Visualize():
                     plt.scatter(graph.input, graph.output, label=graph.datalabel)
                 else:
                     plt.scatter(graph.input, graph.output, label=graph.datalabel, color=graph.color)
+            if graph.action == self.Action.ONEVAR_PLOT or graph.action == self.Action.ONEVAR_SCATTER:
+                plt.legend()        
         plt.tight_layout()
         
     def show(self):
@@ -110,7 +112,7 @@ def confirm():
     vis.draw_2_variable_func_colormap(f, [0, 5], [0, 5], "sin(x) * cos(y)", "x", "y")
     vis.draw_2_variable_func_colormap(g, [0, 5], [0, 5], "x + y", "x", "y")
     vis.draw_1_variable_func(h, [-2, 2], False, "1d datas", "x ** 2", "x", "y")
-    vis.draw_1_variable_data([0, 1, 3, 5], [4, 2, 8, 11], True, "", "random_datas", "x", "y")
+    vis.draw_1_variable_data([0, 1, 3, 5], [4, 2, 8, 11], True, True, "", "random_datas", "x", "y")
     vis.show()
     
 def main():
