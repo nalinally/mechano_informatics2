@@ -9,11 +9,12 @@ class Visualize():
         TWOVAR_CMAP = 1
         ONEVAR_PLOT = 2
         ONEVAR_SCATTER = 3
+        ONEVAR_FILL = 4
         
     class Graph():
-        def __init__(self, action, input, output, overwrap=False, title="", datalabel="", xlabel="x", ylabel="y", color=""):
+        def __init__(self, action, input_, output, overwrap=False, title="", datalabel="", xlabel="x", ylabel="y", color=""):
             self.action = action
-            self.input = input
+            self.input = input_
             self.output = output
             self.overwrap = overwrap
             self.title = title
@@ -48,6 +49,9 @@ class Visualize():
         
     def draw_1_variable_data(self, x, y, overwrap=False, scatter="True", title="", datalabel="", xlabel="x", ylabel="y", color=""):
         self.graphs.append(self.Graph(self.Action.ONEVAR_SCATTER if scatter else self.Action.ONEVAR_PLOT, x, y, overwrap, title, datalabel, xlabel, ylabel, color))
+
+    def fill_1_vaiable_func(self, x_range, y_func1, y_func2, color="", n=200):
+        x = np.linspace()
 
     def reset(self):
         self.__init__()

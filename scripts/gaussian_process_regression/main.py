@@ -11,7 +11,7 @@ import common.visualize as vis
 import kernel_func as kernel
 
 x_range = [0, 10]
-sigma = 0
+sigma = 0.05
 
 def main():
     x = np.random.random(50) * (x_range[1] - x_range[0]) + x_range[0]
@@ -47,8 +47,8 @@ def visualize_data(visualizer, gpr, i, y_mean, x_sample, y_sample, f):
     visualizer.draw_1_variable_func(f, x_range, False, f"x vs y: n={i}", f"true func", "x", "y")
     visualizer.draw_1_variable_data(x_sample, y_sample, True, True, "", f"train data", "x", "y")
     visualizer.draw_1_variable_data(x, mu + y_mean, True, False, "", f"predicted", "", "", "red")
-    for j in range(n_sample):
-        visualizer.draw_1_variable_data(x, np.random.multivariate_normal(mu, S) + y_mean, True, False, "", f"sample{j}", "", "", "green")
+    # for j in range(n_sample):
+    #     visualizer.draw_1_variable_data(x, np.random.multivariate_normal(mu, S) + y_mean, True, False, "", f"sample{j}", "", "", "green")
 
 def visualize_y_dist(visualizer, gpr, i, y_mean):
     x = np.linspace(x_range[0], x_range[1], 100)
