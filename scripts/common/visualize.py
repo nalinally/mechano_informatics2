@@ -47,7 +47,7 @@ class Visualize():
         y = [f(x_) for x_ in x]
         self.graphs.append(self.Graph(self.Action.ONEVAR_PLOT, x, y, overwrap, title, datalabel, xlabel, ylabel, color))
         
-    def draw_1_variable_data(self, x, y, overwrap=False, scatter="True", title="", datalabel="", xlabel="x", ylabel="y", color=""):
+    def draw_1_variable_data(self, x, y, overwrap=False, scatter=True, title="", datalabel="", xlabel="x", ylabel="y", color=""):
         self.graphs.append(self.Graph(self.Action.ONEVAR_SCATTER if scatter else self.Action.ONEVAR_PLOT, x, y, overwrap, title, datalabel, xlabel, ylabel, color))
 
     def fill_1_variable_func(self, x_range, y_func1, y_func2, color="", n=200):
@@ -80,6 +80,7 @@ class Visualize():
                 ax[-1].set_ylabel(graph.ylabel)
             if graph.action == self.Action.TWOVAR_CMAP:
                 plt.pcolormesh(graph.input[0], graph.input[1], graph.output, cmap='viridis', shading='auto')
+                plt.colorbar()
             if graph.action == self.Action.ONEVAR_PLOT:
                 if graph.color == "":
                     plt.plot(graph.input, graph.output, label=graph.datalabel)

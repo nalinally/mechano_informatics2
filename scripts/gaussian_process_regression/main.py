@@ -15,6 +15,7 @@ sigma = 0
 
 def main():
     x = np.random.random(50) * (x_range[1] - x_range[0]) + x_range[0]
+    # x = [1, 9, 5, 3, 7, 2, 8, 6, 4]
     f = lambda x: np.sin(x) + np.cos(1.5*x)
     y = gendata.add_gaussian_noise([f(x_) for x_ in x], sigma)
 
@@ -26,19 +27,21 @@ def main():
         y_mean = np.mean(y_train)
         y_input = y_train - y_mean
 
+        visualizer.reset()
+        visualizer.set_figsize(12, 6)
+
         theta = gpr.GaussianProcessRegression.optimize_hiper_param(
                 np.array([x_input]).T, np.array(y_input).T, 2, 
                 lambda theta, x1, x2: kernel.RBF(theta[0], theta[1])(x1, x2), 
                 lambda theta, x1, x2: kernel.RBF_diff(theta[0], theta[1])(x1, x2),
-                [1, 1])
+                [0, 0], visualizer)
         gpr_regression = gpr.GaussianProcessRegression(kernel.RBF(theta[0], theta[1]))
 
         gpr_regression.learn(np.array([x_input]).T, np.array(y_input).T)
-        visualizer.reset()
-        visualizer.set_figsize(8, 6)
         visualize_data(visualizer, gpr_regression, i, y_mean, x_input, y_train, f)
         # visualize_y_dist(visualizer, gpr_regression, i, y_mean)
-        visualizer.show()
+        # visualizer.show()
+        visualizer.save(f"../../figs/gaussian_process_regression/ex1/{i}.png")
 
 def visualize_data(visualizer, gpr, i, y_mean, x_sample, y_sample, f):
     x = np.linspace(x_range[0], x_range[1], 300)

@@ -9,8 +9,8 @@ sys.path.append("../")
 import common.generate_data as gendata
 import common.visualize as vis
 
-alpha = 100
-beta = 0.01
+alpha = 0.01
+beta = 0.1
 a = 3
 b = -1
 sigma = 3
@@ -23,7 +23,7 @@ def main():
     
     mses_list = []
     
-    for _ in range(1):
+    for _ in range(6):
     
         lbr_regression.__init__(2, alpha, beta)
     
@@ -72,33 +72,33 @@ def main():
             input = np.hstack([[[1] for _ in range(len(x_data))], np.array([x_data]).T])
             lbr_regression.learn(input, np.array(y_data))
             mu, S = lbr_regression.w_distribute()
-            w = lbr_regression.w_sample(20)
-            x_lin = np.linspace(x_range[0], x_range[1], 200)
-            x_data_for_ydis = np.hstack([[[1] for _ in range(200)], np.array([x_lin]).T])
-            y_distribute = lbr_regression.y_distribute(x_data_for_ydis)
-            y_lin = np.linspace(-10, 40, 200)
-            z = []
-            for ydis in np.array(y_distribute).T:
-                rv = multivariate_normal(ydis[0], ydis[1])
-                z.append(rv.pdf(y_lin))
-            X, Y = np.meshgrid(x_lin, y_lin)
-            # print(mu)
-            # print(S)
-            rv = multivariate_normal(mu, S)
-            def f(x, y):
-                return rv.pdf([x, y])
-            visualizer.reset()
-            visualizer.set_figsize(18, 6)
-            visualizer.draw_2_variable_func_colormap(f, [-5, 5], [-5, 5], f"pdf of (w0, w1): n={i}", "w0", "w1")
-            visualizer.draw_1_variable_func(y_func, x_range, False, "x vs y", f"y = {a}x + {b}", "x", "y", "blue")
-            visualizer.draw_1_variable_data(x_data, y_data, True, True, "", f"train data", "x", "y")
-            for w_ in w:
-                def g(x):
-                    return gendata.linear(w_[1], w_[0], x)
-                visualizer.draw_1_variable_func(g, x_range, True, "", f"y = {w_[1]}x + {w_[0]}", "x", "y", "red")
-            visualizer.draw_2_variable_data_colormap(X, Y, np.array(z).T, f"pdf of (x, y): n={i}", "x", "y")
-            # visualizer.show()
-            visualizer.save(f"../../figs/linear_bayesian_regression/a100_b001_sigma3/{i}.png")
+            # w = lbr_regression.w_sample(20)
+            # x_lin = np.linspace(x_range[0], x_range[1], 200)
+            # x_data_for_ydis = np.hstack([[[1] for _ in range(200)], np.array([x_lin]).T])
+            # y_distribute = lbr_regression.y_distribute(x_data_for_ydis)
+            # y_lin = np.linspace(-10, 40, 200)
+            # z = []
+            # for ydis in np.array(y_distribute).T:
+            #     rv = multivariate_normal(ydis[0], ydis[1])
+            #     z.append(rv.pdf(y_lin))
+            # X, Y = np.meshgrid(x_lin, y_lin)
+            # # print(mu)
+            # # print(S)
+            # rv = multivariate_normal(mu, S)
+            # def f(x, y):
+            #     return rv.pdf([x, y])
+            # visualizer.reset()
+            # visualizer.set_figsize(18, 6)
+            # visualizer.draw_2_variable_func_colormap(f, [-5, 5], [-5, 5], f"pdf of (w0, w1): n={i}", "w0", "w1")
+            # visualizer.draw_1_variable_func(y_func, x_range, False, "x vs y", f"y = {a}x + {b}", "x", "y", "blue")
+            # visualizer.draw_1_variable_data(x_data, y_data, True, True, "", f"train data", "x", "y")
+            # for w_ in w:
+            #     def g(x):
+            #         return gendata.linear(w_[1], w_[0], x)
+            #     visualizer.draw_1_variable_func(g, x_range, True, "", f"y = {w_[1]}x + {w_[0]}", "x", "y", "red")
+            # visualizer.draw_2_variable_data_colormap(X, Y, np.array(z).T, f"pdf of (x, y): n={i}", "x", "y")
+            # # visualizer.show()
+            # visualizer.save(f"../../figs/linear_bayesian_regression/a100_b001_sigma3/{i}.png")
             mses.append(linear_func_mse(a, b, mu[1], mu[0], x_range[0], x_range[1]))
         
         mses_list.append(mses)
