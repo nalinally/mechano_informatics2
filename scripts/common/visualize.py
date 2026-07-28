@@ -50,8 +50,14 @@ class Visualize():
     def draw_1_variable_data(self, x, y, overwrap=False, scatter="True", title="", datalabel="", xlabel="x", ylabel="y", color=""):
         self.graphs.append(self.Graph(self.Action.ONEVAR_SCATTER if scatter else self.Action.ONEVAR_PLOT, x, y, overwrap, title, datalabel, xlabel, ylabel, color))
 
-    def fill_1_vaiable_func(self, x_range, y_func1, y_func2, color="", n=200):
-        x = np.linspace()
+    def fill_1_variable_func(self, x_range, y_func1, y_func2, color="", n=200):
+        x = np.linspace(x_range[0], x_range[1], n)
+        y1 = [y_func1(x_) for x_ in x]
+        y2 = [y_func2(x_) for x_ in x]
+        self.graphs.append(self.Graph(self.Action.ONEVAR_FILL, x, [y1, y2], True, "", "", "", "", color))
+
+    def fill_1_variable_data(self, x, y1, y2, color="", n=200):
+        self.graphs.append(self.Graph(self.Action.ONEVAR_FILL, x, [y1, y2], True, "", "", "", "", color))
 
     def reset(self):
         self.__init__()
@@ -84,6 +90,11 @@ class Visualize():
                     plt.scatter(graph.input, graph.output, label=graph.datalabel)
                 else:
                     plt.scatter(graph.input, graph.output, label=graph.datalabel, color=graph.color)
+            if graph.action == self.Action.ONEVAR_FILL:
+                if graph.color == "":
+                    plt.fill_between(graph.input, graph.output[0], graph.output[1])
+                else:
+                    plt.fill_between(graph.input, graph.output[0], graph.output[1], color=graph.color)
             if graph.action == self.Action.ONEVAR_PLOT or graph.action == self.Action.ONEVAR_SCATTER:
                 plt.legend()        
         plt.tight_layout()

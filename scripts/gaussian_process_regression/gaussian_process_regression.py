@@ -10,13 +10,15 @@ class GaussianProcessRegression():
         self.y = None
 
     @classmethod
-    def optimize_hiper_param(self, X, y, n, k, dkdtheta, theta0, th=0.01, iter=1000, alpha=0.1):
+    def optimize_hiper_param(self, X, y, n, k, dkdtheta, theta0, th=0.01, iter=1000, alpha=2):
         def L(theta):
-            K = [[k(theta, x, x_) for x in X] for x_ in X]
+            K = np.array([[k(theta, x, x_) for x in X] for x_ in X])
+            K += np.eye(len(K)) * 1e-10
             x = np.linalg.solve(K, y)
             return -np.log(np.linalg.det(K)) - np.array(y).T @ x
         def dLdtheta(theta):
-            K = [[k(theta, x, x_) for x in X] for x_ in X]
+            K = np.array([[k(theta, x, x_) for x in X] for x_ in X])
+            K += np.eye(len(K)) * 1e-10
             x = np.linalg.solve(K, y)
             dKdtheta = np.array([[dkdtheta(theta, x, x_) for x in X] for x_ in X])
             return [-np.trace(np.linalg.solve(K, dKdtheta[:, :, i])) + x.T @ dKdtheta[:, :, i] @ x for i in range(len(dKdtheta[0][0]))]
@@ -32,15 +34,20 @@ class GaussianProcessRegression():
             #     print(K_inv)
             #     return
             if diff_norm <= th:
-                print(f"[GPR.opthiperparam] converged. theta:{theta}")
+                print(f"[GPR.opthiperparam] converged. dLdtheta:{diff_norm} theta:{theta}")
                 return theta
             else:
-                theta += diff / diff_norm * alpha
-        print(f"[GPR.opthiperparam] max iter reached. theta:{theta}")
+                theta_list = [theta + (diff / diff_norm * a) for a in np.linspace(0, diff_norm*alpha, 100)]
+                # dLdtheta_list = [np.abs(np.dot(dLdtheta(theta_), diff) / diff_norm) for theta_ in theta_list]
+                L_list = [L(theta_) for theta_ in theta_list]
+                theta = theta_list[np.argmax(L_list)]
+                # theta += diff / diff_norm * alpha
+        print(f"[GPR.opthiperparam] max iter reached. dLdtheta:{diff_norm} theta:{theta}")
         return theta
 
     def learn(self, X, y):
-        self.K = [[self.k(x, x_) for x_ in X] for x in X]
+        self.K = np.array([[self.k(x, x_) for x_ in X] for x in X])
+        self.K += np.eye(len(self.K)) * 1e-10
         # self.K_inv = np.linalg.inv(self.K)
         self.X = X
         self.y = y

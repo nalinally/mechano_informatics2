@@ -11,7 +11,7 @@ import common.visualize as vis
 import kernel_func as kernel
 
 x_range = [0, 10]
-sigma = 0.05
+sigma = 0
 
 def main():
     x = np.random.random(50) * (x_range[1] - x_range[0]) + x_range[0]
@@ -35,18 +35,20 @@ def main():
 
         gpr_regression.learn(np.array([x_input]).T, np.array(y_input).T)
         visualizer.reset()
-        visualizer.set_figsize(12, 6)
+        visualizer.set_figsize(8, 6)
         visualize_data(visualizer, gpr_regression, i, y_mean, x_input, y_train, f)
-        visualize_y_dist(visualizer, gpr_regression, i, y_mean)
+        # visualize_y_dist(visualizer, gpr_regression, i, y_mean)
         visualizer.show()
 
 def visualize_data(visualizer, gpr, i, y_mean, x_sample, y_sample, f):
-    x = np.linspace(x_range[0], x_range[1], 100)
+    x = np.linspace(x_range[0], x_range[1], 300)
     n_sample = 5
     mu, S = gpr.y_dist(np.array([x]).T)
+    s = [np.sqrt(s2) for s2 in np.diag(S)]
     visualizer.draw_1_variable_func(f, x_range, False, f"x vs y: n={i}", f"true func", "x", "y")
-    visualizer.draw_1_variable_data(x_sample, y_sample, True, True, "", f"train data", "x", "y")
     visualizer.draw_1_variable_data(x, mu + y_mean, True, False, "", f"predicted", "", "", "red")
+    visualizer.fill_1_variable_data(x, mu + y_mean + s, mu + y_mean - s, "lime")
+    visualizer.draw_1_variable_data(x_sample, y_sample, True, True, "", f"train data", "x", "y")
     # for j in range(n_sample):
     #     visualizer.draw_1_variable_data(x, np.random.multivariate_normal(mu, S) + y_mean, True, False, "", f"sample{j}", "", "", "green")
 
